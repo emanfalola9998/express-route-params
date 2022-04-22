@@ -26,7 +26,7 @@ app.get("/eat/carrot", (req, res) => {
   });
 });
 
-app.get("/echo/:exampleRouteParameter", (req, res) => {
+app.get<{exampleRouteParameter: string}>("/echo/:exampleRouteParameter", (req, res) => {
   const echoContent = req.params.exampleRouteParameter;
   res.json({
     echo: echoContent,
@@ -34,7 +34,7 @@ app.get("/echo/:exampleRouteParameter", (req, res) => {
   });
 });
 
-app.get("/multiply/:numOne/:numTwo", (req, res) => {
+app.get<{numOne: string, numTwo:string}>("/multiply/:numOne/:numTwo", (req, res) => {
   /**
    * Note that `numOne` and `numTwo` are both typed as string.
    * (Hover over with your mouse to see!)
@@ -43,6 +43,7 @@ app.get("/multiply/:numOne/:numTwo", (req, res) => {
    * are parsed by Express.
    */
   const { numOne, numTwo } = req.params;
+  // destructured object to access numOne, numTwo
   const multiplication = parseInt(numOne) * parseInt(numTwo);
   res.json({
     original: `${numOne} x ${numTwo}`,
@@ -70,6 +71,34 @@ app.get<{ name: string }>("/happy-birthday/:name", (req, res) => {
     ],
   });
 });
+
+app.get<{whatever: string}>("/shout/:whatever", (req, res) => {
+  const shoutWhatever = req.params.whatever;
+  res.json({
+    shout: shoutWhatever,
+    message: `I am shouting back at you: ${shoutWhatever}`,
+  });
+});
+
+app.get<{number1: string, number2: string, number3:string}>("/add/:number1/:number2/:number3?", (req, res) => {
+  let {number1, number2, number3}= req.params
+  if (number3 === undefined){
+    number3 = "0"
+  }
+  const add = parseInt(number1) + parseInt(number2) + parseInt(number3)
+  res.json({
+    original: `${number1} + ${number2} + ${number3}`,
+    result: add,
+  })
+})
+
+app.get<{animal:string}>("/eat/:animal", (req,res) =>{
+  const typeAnimal = req.params.animal
+  res.json({
+    message: `Yum Yum - you ate a ${typeAnimal}`,
+  })
+})
+
 
 // using 4000 by convention, but could be changed
 const PORT_NUMBER = 4000;
